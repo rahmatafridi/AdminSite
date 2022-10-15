@@ -1,0 +1,7 @@
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.csproj.AssemblyReference.cache
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.AssemblyInfoInputs.cache
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.AssemblyInfo.cs
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Administrator\Documents\GitHub\AdminSite\AdminSite\AdminSite\obj\Debug\net5.1\AdminSite.MvcApplicationPartsAssemblyInfo.cache

@@ -1,15 +1,12 @@
+using AdminSite.Framework.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using VueCliMiddleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 namespace AdminSite
 {
@@ -26,6 +23,18 @@ namespace AdminSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
+            //    .AddJwtBearer(o =>
+            //{
+            //    o.Authority = "http://localhost:8080";
+            //    o.RequireHttpsMetadata = false;
+            //});
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp";
@@ -42,6 +51,7 @@ namespace AdminSite
 
             app.UseRouting();
             app.UseSpaStaticFiles();
+            app.UseMiddleware<JwtMiddleware>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

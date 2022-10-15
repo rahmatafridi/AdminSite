@@ -8,7 +8,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: DefaultLayout,
-    redirect: '/dashboard',
+    redirect: '/pages/login',
     children: [
       {
         path: '/dashboard',
@@ -302,6 +302,18 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
+})
+
+router.beforeEach((to) => {
+  debugger
+  if (
+    localStorage.getItem('token') === '' ||
+    localStorage.getItem('token') === null ||
+    localStorage.getItem('token') === undefined
+  ) {
+    localStorage.clear()
+    if (to.path !== '/pages/login') return '/'
+  }
 })
 
 export default router

@@ -1,7 +1,87 @@
 <template>
   <div>
     <WidgetsStatsA />
+
     <CRow>
+      <div>
+        <CButton color="primary" @click="getWetherData"
+          >Get Whether Data</CButton
+        >
+        <CButton color="secondary">Add Data</CButton>
+      </div>
+      <br />
+      <CTable
+        align="middle"
+        class="mb-0 border"
+        hover
+        responsive
+        v-if="getWetherData"
+      >
+        <CTableHead color="light">
+          <CTableRow>
+            <CTableHeaderCell class="text-center">
+              <CIcon name="cil-people" />
+            </CTableHeaderCell>
+            <CTableHeaderCell>User</CTableHeaderCell>
+            <CTableHeaderCell class="text-center">Country</CTableHeaderCell>
+            <CTableHeaderCell>Usage</CTableHeaderCell>
+            <CTableHeaderCell class="text-center"
+              >Payment Method</CTableHeaderCell
+            >
+            <CTableHeaderCell>Activity</CTableHeaderCell>
+          </CTableRow>
+        </CTableHead>
+        <CTableBody>
+          <CTableRow v-for="item in tableExample" :key="item.name">
+            <CTableDataCell class="text-center">
+              <CAvatar
+                size="md"
+                :src="item.avatar.src"
+                :status="item.avatar.status"
+              />
+            </CTableDataCell>
+            <CTableDataCell>
+              <div>{{ item.user.name }}</div>
+              <div class="small text-medium-emphasis">
+                <span>{{ item.user.new ? 'New' : 'Recurring' }}</span> |
+                {{ item.user.registered }}
+              </div>
+            </CTableDataCell>
+            <CTableDataCell class="text-center">
+              <CIcon
+                size="xl"
+                :name="item.country.flag"
+                :title="item.country.name"
+              />
+            </CTableDataCell>
+            <CTableDataCell>
+              <div class="clearfix">
+                <div class="float-start">
+                  <strong>{{ item.usage.value }}%</strong>
+                </div>
+                <div class="float-end">
+                  <small class="text-medium-emphasis">
+                    {{ item.usage.period }}
+                  </small>
+                </div>
+              </div>
+              <CProgress
+                thin
+                :color="item.usage.color"
+                :value="item.usage.value"
+              />
+            </CTableDataCell>
+            <CTableDataCell class="text-center">
+              <CIcon size="xl" :name="item.payment.icon" />
+            </CTableDataCell>
+            <CTableDataCell>
+              <div class="small text-medium-emphasis">Last login</div>
+              <strong>{{ item.activity }}</strong>
+            </CTableDataCell>
+          </CTableRow>
+          <CTableRow> </CTableRow>
+        </CTableBody>
+      </CTable>
       <CCol :md="12">
         <CCard class="mb-4">
           <CCardBody>
@@ -192,75 +272,6 @@
                 </div>
               </CCol>
             </CRow>
-            <br />
-            <CTable align="middle" class="mb-0 border" hover responsive>
-              <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell class="text-center">
-                    <CIcon name="cil-people" />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell>User</CTableHeaderCell>
-                  <CTableHeaderCell class="text-center"
-                    >Country</CTableHeaderCell
-                  >
-                  <CTableHeaderCell>Usage</CTableHeaderCell>
-                  <CTableHeaderCell class="text-center"
-                    >Payment Method</CTableHeaderCell
-                  >
-                  <CTableHeaderCell>Activity</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                <CTableRow v-for="item in tableExample" :key="item.name">
-                  <CTableDataCell class="text-center">
-                    <CAvatar
-                      size="md"
-                      :src="item.avatar.src"
-                      :status="item.avatar.status"
-                    />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{{ item.user.name }}</div>
-                    <div class="small text-medium-emphasis">
-                      <span>{{ item.user.new ? 'New' : 'Recurring' }}</span> |
-                      {{ item.user.registered }}
-                    </div>
-                  </CTableDataCell>
-                  <CTableDataCell class="text-center">
-                    <CIcon
-                      size="xl"
-                      :name="item.country.flag"
-                      :title="item.country.name"
-                    />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div class="clearfix">
-                      <div class="float-start">
-                        <strong>{{ item.usage.value }}%</strong>
-                      </div>
-                      <div class="float-end">
-                        <small class="text-medium-emphasis">
-                          {{ item.usage.period }}
-                        </small>
-                      </div>
-                    </div>
-                    <CProgress
-                      thin
-                      :color="item.usage.color"
-                      :value="item.usage.value"
-                    />
-                  </CTableDataCell>
-                  <CTableDataCell class="text-center">
-                    <CIcon size="xl" :name="item.payment.icon" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div class="small text-medium-emphasis">Last login</div>
-                    <strong>{{ item.activity }}</strong>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow> </CTableRow>
-              </CTableBody>
-            </CTable>
           </CCardBody>
         </CCard>
       </CCol>
@@ -269,12 +280,8 @@
 </template>
 
 <script>
-import avatar1 from '@/assets/images/avatars/1.jpg'
-import avatar2 from '@/assets/images/avatars/2.jpg'
-import avatar3 from '@/assets/images/avatars/3.jpg'
-import avatar4 from '@/assets/images/avatars/4.jpg'
-import avatar5 from '@/assets/images/avatars/5.jpg'
-import avatar6 from '@/assets/images/avatars/6.jpg'
+import axios from 'axios'
+
 import MainChartExample from './charts/MainChartExample'
 import WidgetsStatsA from './widgets/WidgetsStatsTypeA.vue'
 import WidgetsStatsD from './widgets/WidgetsStatsTypeD.vue'
@@ -311,103 +318,31 @@ export default {
       { title: 'Twitter', icon: 'cib-twitter', percent: 11, value: '37,564' },
       { title: 'LinkedIn', icon: 'cib-linkedin', percent: 8, value: '27,319' },
     ]
-    const tableExample = [
-      {
-        avatar: { src: avatar1, status: 'success' },
-        user: {
-          name: 'Yiorgos Avraamu',
-          new: true,
-          registered: 'Jan 1, 2021',
-        },
-        country: { name: 'USA', flag: 'cif-us' },
-        usage: {
-          value: 50,
-          period: 'Jun 11, 2021 - Jul 10, 2021',
-          color: 'success',
-        },
-        payment: { name: 'Mastercard', icon: 'cib-cc-mastercard' },
-        activity: '10 sec ago',
-      },
-      {
-        avatar: { src: avatar2, status: 'danger' },
-        user: {
-          name: 'Avram Tarasios',
-          new: false,
-          registered: 'Jan 1, 2021',
-        },
-        country: { name: 'Brazil', flag: 'cif-br' },
-        usage: {
-          value: 22,
-          period: 'Jun 11, 2021 - Jul 10, 2021',
-          color: 'info',
-        },
-        payment: { name: 'Visa', icon: 'cib-cc-visa' },
-        activity: '5 minutes ago',
-      },
-      {
-        avatar: { src: avatar3, status: 'warning' },
-        user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-        country: { name: 'India', flag: 'cif-in' },
-        usage: {
-          value: 74,
-          period: 'Jun 11, 2021 - Jul 10, 2021',
-          color: 'warning',
-        },
-        payment: { name: 'Stripe', icon: 'cib-cc-stripe' },
-        activity: '1 hour ago',
-      },
-      {
-        avatar: { src: avatar4, status: 'secondary' },
-        user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-        country: { name: 'France', flag: 'cif-fr' },
-        usage: {
-          value: 98,
-          period: 'Jun 11, 2021 - Jul 10, 2021',
-          color: 'danger',
-        },
-        payment: { name: 'PayPal', icon: 'cib-cc-paypal' },
-        activity: 'Last month',
-      },
-      {
-        avatar: { src: avatar5, status: 'success' },
-        user: {
-          name: 'Agapetus Tadeáš',
-          new: true,
-          registered: 'Jan 1, 2021',
-        },
-        country: { name: 'Spain', flag: 'cif-es' },
-        usage: {
-          value: 22,
-          period: 'Jun 11, 2021 - Jul 10, 2021',
-          color: 'primary',
-        },
-        payment: { name: 'Google Wallet', icon: 'cib-cc-apple-pay' },
-        activity: 'Last week',
-      },
-      {
-        avatar: { src: avatar6, status: 'danger' },
-        user: {
-          name: 'Friderik Dávid',
-          new: true,
-          registered: 'Jan 1, 2021',
-        },
-        country: { name: 'Poland', flag: 'cif-pl' },
-        usage: {
-          value: 43,
-          period: 'Jun 11, 2021 - Jul 10, 2021',
-          color: 'success',
-        },
-        payment: { name: 'Amex', icon: 'cib-cc-amex' },
-        activity: 'Last week',
-      },
-    ]
 
     return {
-      tableExample,
       progressGroupExample1,
       progressGroupExample2,
       progressGroupExample3,
     }
+  },
+
+  data: function () {
+    return {
+      tableExample: [],
+    }
+  },
+  methods: {
+    getWetherData: function () {
+      let root = this
+      axios.defaults.headers.common['Authorization'] =
+        'Bearer ' + localStorage.getItem('token')
+      debugger
+
+      axios.get('api/WeatherForecast/Data').then((res) => {
+        debugger
+        root.tableExample = res.data
+      })
+    },
   },
 }
 </script>

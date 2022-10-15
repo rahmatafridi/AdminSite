@@ -338,7 +338,7 @@ export default {
         'Bearer ' + localStorage.getItem('token')
       debugger
 
-      axios.get('api/WeatherForecast/Data').then((res) => {
+      axios.get('/WeatherForecast').then((res) => {
         debugger
         root.tableExample = res.data
       })

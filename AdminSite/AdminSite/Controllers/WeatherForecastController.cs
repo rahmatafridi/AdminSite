@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace AdminSite.Controllers
 {
     [ApiController]
-    [Route("api/WeatherForecast")]
-    public class WeatherForecastController : AuthenticatedController
+    [Route("[controller]")]
+    public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
@@ -25,7 +25,7 @@ namespace AdminSite.Controllers
         }
 
         [HttpGet]
-        public IActionResult Data()
+        public IActionResult Get()
         {
             var rng = new Random();
             var data = Enumerable.Range(1, 5).Select(index => new WeatherForecast

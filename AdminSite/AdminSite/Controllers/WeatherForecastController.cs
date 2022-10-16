@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AdminSite.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,10 +22,15 @@ namespace AdminSite.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private IHubContext<ConnectionHub> _hubContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, 
+            IHubContext<ConnectionHub> hubContext)
         {
             _logger = logger;
+            _hubContext = hubContext;
+
         }
 
         [HttpGet]
@@ -37,8 +44,26 @@ namespace AdminSite.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+            //    _hubContext.Clients.All.SendAsync("GetNotification", CommonManager.NotificationService.GetNotification(note.To));
 
             return Ok(data);
         }
+
+        [HttpPost]
+        public IActionResult PostData()
+        {
+            var rng = new Random();
+            var data = Enumerable.Range(1, 1).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            })
+            .ToArray();
+               _hubContext.Clients.All.SendAsync("PostWhetherData", data);
+
+            return Ok();
+        }
+
     }
 }

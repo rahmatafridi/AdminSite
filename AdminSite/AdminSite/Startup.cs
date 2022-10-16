@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using AdminSite.Framework;
+using AdminSite.Service;
 
 namespace AdminSite
 {
@@ -45,6 +46,8 @@ namespace AdminSite
                 };
             });
 
+            services.AddSignalR();
+
             services.AddSingleton<IJWTManagerRepository, JWTManagerRepository>();
 
             //    .AddJwtBearer(o =>
@@ -77,6 +80,11 @@ namespace AdminSite
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ConnectionHub>("/chatHub");
             });
 
             app.UseSpa(spa =>

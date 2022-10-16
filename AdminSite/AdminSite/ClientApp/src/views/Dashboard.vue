@@ -7,7 +7,7 @@
         <CButton color="primary" @click="getWetherData"
           >Get Whether Data</CButton
         >
-        <!-- <CButton color="secondary">Add Data</CButton> -->
+        <CButton color="secondary" @click="PostWetherData">Add Data</CButton>
         <br />
         <br />
       </div>
@@ -252,6 +252,7 @@ import axios from 'axios'
 import MainChartExample from './charts/MainChartExample'
 import WidgetsStatsA from './widgets/WidgetsStatsTypeA.vue'
 import WidgetsStatsD from './widgets/WidgetsStatsTypeD.vue'
+import { HubConnectionBuilder, LogLevel } from '@aspnet/signalr'
 
 export default {
   name: 'Dashboard',
@@ -298,11 +299,46 @@ export default {
       tableExample: [],
     }
   },
+  mounted() {
+    debugger
+    const connection = new HubConnectionBuilder()
+      .withUrl('/chatHub')
+      .configureLogging(LogLevel.Information)
+      .build()
+
+    console.log(connection)
+
+    connection.on('SendMessage', (userId, userName) => {
+      debugger
+
+      connection.$emit('user-added-event', { userId, userName })
+    })
+let root = this
+      connection.on('PostWhetherData', (data) => {
+      debugger
+      root.tableExample.push(data[0])
+    })
+
+
+    connection
+      .start()
+      .then((a) => {
+        debugger
+        console.log('connection established', a)
+        connection.invoke('SendMessage', 'user', 'mess').catch(function (err) {
+          debugger
+          return console.error(err.toString())
+        })
+      })
+      .catch(function (err) {
+        return console.error(err.toString())
+      })
+  },
   methods: {
     getWetherData: function () {
       let root = this
-       axios.defaults.headers.common['Authorization'] =
-       'Bearer ' + localStorage.getItem('token')
+      axios.defaults.headers.common['Authorization'] =
+        'Bearer ' + localStorage.getItem('token')
 
       axios.get('/WeatherForecast').then(
         (res) => {
@@ -316,6 +352,13 @@ export default {
           alert(error)
         },
       )
+    },
+
+    PostWetherData: function () {
+      axios.defaults.headers.common['Authorization'] =
+        'Bearer ' + localStorage.getItem('token')
+
+      axios.post('/WeatherForecast')
     },
   },
 }

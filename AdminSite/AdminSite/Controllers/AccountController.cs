@@ -1,4 +1,5 @@
-﻿using AdminSite.Models;
+﻿using AdminSite.Framework;
+using AdminSite.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,12 @@ namespace AdminSite.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IJWTManagerRepository _jWTManager;
+
+        public AccountController(IJWTManagerRepository jWTManager)
+        {
+            _jWTManager = jWTManager;
+        }
         [HttpPost]
         public IActionResult Login(Login login)
         {
@@ -22,15 +29,16 @@ namespace AdminSite.Controllers
                 {
                     Id = 1,
                     Email = login.Email,
+                    Password = login.Password,
                     Firstname = "Admin",
                     Lastname = "Admin",
                     Username = "Admin",
                     UserRoleId = 1
                 };
 
-                var token = GenerateJwtToken(user);
+                var token = _jWTManager.Authenticate(user);
 
-                user.Token = token;
+                user.Token = token.Token;
                
                 return Ok(new { status = StatusCodes.Status200OK, obj = user });
             }

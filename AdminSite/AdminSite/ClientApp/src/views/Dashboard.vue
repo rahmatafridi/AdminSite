@@ -7,81 +7,48 @@
         <CButton color="primary" @click="getWetherData"
           >Get Whether Data</CButton
         >
-        <CButton color="secondary">Add Data</CButton>
+        <!-- <CButton color="secondary">Add Data</CButton> -->
+        <br />
+        <br />
       </div>
-      <br />
       <CTable
         align="middle"
-        class="mb-0 border"
+        class="mb-4 border"
         hover
         responsive
-        v-if="getWetherData"
+        v-if="tableExample.length > 0"
       >
         <CTableHead color="light">
           <CTableRow>
-            <CTableHeaderCell class="text-center">
-              <CIcon name="cil-people" />
-            </CTableHeaderCell>
-            <CTableHeaderCell>User</CTableHeaderCell>
-            <CTableHeaderCell class="text-center">Country</CTableHeaderCell>
-            <CTableHeaderCell>Usage</CTableHeaderCell>
-            <CTableHeaderCell class="text-center"
-              >Payment Method</CTableHeaderCell
-            >
-            <CTableHeaderCell>Activity</CTableHeaderCell>
+            <CTableHeaderCell>Date</CTableHeaderCell>
+            <CTableHeaderCell class="text-center">Temp</CTableHeaderCell>
+            <CTableHeaderCell>TempF</CTableHeaderCell>
+            <CTableHeaderCell class="text-center">Summary</CTableHeaderCell>
           </CTableRow>
         </CTableHead>
         <CTableBody>
           <CTableRow v-for="item in tableExample" :key="item.name">
+            <CTableDataCell>
+              <div>{{ item.date }}</div>
+            </CTableDataCell>
             <CTableDataCell class="text-center">
-              <CAvatar
-                size="md"
-                :src="item.avatar.src"
-                :status="item.avatar.status"
-              />
+              <div>{{ item.temperatureC }}</div>
             </CTableDataCell>
             <CTableDataCell>
-              <div>{{ item.user.name }}</div>
               <div class="small text-medium-emphasis">
-                <span>{{ item.user.new ? 'New' : 'Recurring' }}</span> |
-                {{ item.user.registered }}
+                {{ item.temperatureF }}
               </div>
             </CTableDataCell>
             <CTableDataCell class="text-center">
-              <CIcon
-                size="xl"
-                :name="item.country.flag"
-                :title="item.country.name"
-              />
-            </CTableDataCell>
-            <CTableDataCell>
-              <div class="clearfix">
-                <div class="float-start">
-                  <strong>{{ item.usage.value }}%</strong>
-                </div>
-                <div class="float-end">
-                  <small class="text-medium-emphasis">
-                    {{ item.usage.period }}
-                  </small>
-                </div>
+              <div class="small text-medium-emphasis">
+                {{ item.summary }}
               </div>
-              <CProgress
-                thin
-                :color="item.usage.color"
-                :value="item.usage.value"
-              />
-            </CTableDataCell>
-            <CTableDataCell class="text-center">
-              <CIcon size="xl" :name="item.payment.icon" />
-            </CTableDataCell>
-            <CTableDataCell>
-              <div class="small text-medium-emphasis">Last login</div>
-              <strong>{{ item.activity }}</strong>
             </CTableDataCell>
           </CTableRow>
           <CTableRow> </CTableRow>
         </CTableBody>
       </CTable>
+
       <CCol :md="12">
         <CCard class="mb-4">
           <CCardBody>
@@ -334,14 +301,21 @@ export default {
   methods: {
     getWetherData: function () {
       let root = this
-      axios.defaults.headers.common['Authorization'] =
-        'Bearer ' + localStorage.getItem('token')
-      debugger
+       axios.defaults.headers.common['Authorization'] =
+       'Bearer ' + localStorage.getItem('token')
 
-      axios.get('/WeatherForecast').then((res) => {
-        debugger
-        root.tableExample = res.data
-      })
+      axios.get('/WeatherForecast').then(
+        (res) => {
+          if (res.data) {
+            root.tableExample = res.data
+          } else {
+            alert('Something wrong')
+          }
+        },
+        (error) => {
+          alert(error)
+        },
+      )
     },
   },
 }

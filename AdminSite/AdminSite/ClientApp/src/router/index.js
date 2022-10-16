@@ -305,7 +305,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  debugger
   if (
     localStorage.getItem('token') === '' ||
     localStorage.getItem('token') === null ||

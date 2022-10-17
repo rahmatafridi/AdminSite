@@ -96,7 +96,7 @@ export default {
           localStorage.setItem('userRole', user.userRole)
           localStorage.setItem('token', user.token)
 
-          location.href = '/dashboard#/dashboard'
+          location.href = '/dashboard'
         } else {
           alert(response.data.obj)
         }

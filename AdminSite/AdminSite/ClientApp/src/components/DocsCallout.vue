@@ -14,7 +14,7 @@
     <br />
     <br />
     For more information please visit our official
-    <CLink :href="url" target="_blank">
+    <CLink  target="_blank">
       documentation of CoreUI Components Library for Vue.js
     </CLink>
     .
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import packageJson from '../../package.json'
 export default {
   name: 'DocsCallout',
   props: {
@@ -43,12 +42,8 @@ export default {
     },
     plural: Boolean,
   },
-  setup(props) {
-    const url = `https://coreui.io/vue/docs/${packageJson.config.coreui_library_short_version}/${props.url}`
-
-    return {
-      url,
-    }
+  setup() {
+   
   },
 }
 </script>
